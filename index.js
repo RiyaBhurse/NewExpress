@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+app.use(express.json());
 let courses = [
     {id: 1, name: 'java'},
     {id: 2, name: 'mern stack'},
@@ -11,9 +12,27 @@ app.get('/courses', (req, res) => {
 app.post('/courses', (req, res) => {
     const course = {
         id: courses.length + 1,
-        name: 'web development'
+        name: req.body.name
     };
     courses.push(course);
     res.send(course);
-});
+}
+);
+app.put('/courses/:id', (req, res) => {
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+    if (!course) return res.status(404).send('The course with the given ID was not found.');
+    course.name = req.body.name;
+    res.send(course);
+}
+);
+app.delete('/courses/:id', (req, res) => {
+    const course = courses.find(c => c.id === parseInt(req.params.id));
+    if (!course) return res.status(404).send('The course with the given ID was not found.');
+    const index = courses.indexOf(course);
+    courses.splice(index, 1);
+    res.send(course);
+}
+);
+
+
 app.listen(3000, () => console.log('Listening on port 3000...'));
