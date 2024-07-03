@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 app.use(express.json());
+app.use(middleware);
+app.use(loggerMiddleware);
 let courses = [
     {id: 1, name: 'java'},
     {id: 2, name: 'mern stack'},
@@ -36,3 +38,14 @@ app.delete('/courses/:id', (req, res) => {
 
 
 app.listen(3000, () => console.log('Listening on port 3000...'));
+
+function middleware(req, res, next) {
+    console.log('Logging...');
+    next();
+}
+
+//loggerMiddleware will return method, ip, hostname, date
+function loggerMiddleware(req, res, next) {
+    console.log(req.method, req.ip, req.hostname, new Date());
+    next();
+}
